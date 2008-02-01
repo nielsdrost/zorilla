@@ -1,32 +1,12 @@
-***** Zorilla Distribution README *****
+This is a snapshot of the zorilla system. Don't expect anything to work yet, as
+it is very much work in progress. Zorilla is a Peer-to-Peer supercomputing 
+system. Zorilla nodes join together in a P2P network to cooperate in running 
+supercomputing applications.
 
-Zorilla is a P2P Supercomputing middleware. It tries to implement as much
-features as possible common to most grid middleware systems (such as Globus and
-Condor) but without any of the central components or management overhead. It
-should be possible to set-up and run jobs on a zorilla network within 5 minutes.
+Zorilla consists of 4 sub parts:
 
-For more information and publications on Zorilla see the website of the ibis
-project: http://www.cs.vu.nl/ibis
-
-***** Basic Zorilla System Overview *****
-
-Zorilla nodes join together in a P2P network to cooperate in running 
-supercomputing applications. So, to run applications on your own "p2p grid" 
-you need to:
-
-1) Start one or more Zorilla nodes and tell them about each other.
-   Alternatively you can join an existing network. Use the zorilla or
-   zorilla.bat script for this purpose (see below for more info)
-   
-2) Submit nodes to your local node. Use zubmit or zubmit.bat
-
-3) Done!
-
-
-The Zorilla distribution consists of 4 sub parts:
-
-1) node     The main Zorilla damon type application which is able to join a 
-	    Zorilla P2P network, find resources, schedule jobs, etc.
+1) node     A damon type application which is able to join a Zorilla P2P
+            network, find resources, schedule jobs, etc.
 2) apps     Utility applications usefull to submit jobs, list information on
             a zorilla node, etc
 3) zoni     An implementation of the Zorilla Node Interface used to contact
@@ -35,7 +15,12 @@ The Zorilla distribution consists of 4 sub parts:
 4) bamboo   Customized version of the Bamboo DHT (www.bamboo-dht.org) system
             created by Sean Rhea see bamboo/LICENSE for the license of bamboo
 
-***** RUNNING ZORILLA *****
+---- DOCUMENTATION ----
+
+for documentation, see the docs directory. Also see the javadoc directory in
+the zoni directory for an overview of classes and functions
+
+---- RUNNING ZORILLA ----
 
 there are several scripts in the "bin" directory to start and use Zorilla.
 

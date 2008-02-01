@@ -10,27 +10,14 @@ if [ -z $ZORILLA_HOME ];  then
 	exit
 fi
 
-#add zorilla home dir to classpath for log4j.properties file
-LIBCLASSPATH=""
-add_to_libclasspath () {
-    JARFILES=`cd "$1" && ls *.jar 2>/dev/null`
-    for i in ${JARFILES} ; do
-        if [ -z "$LIBCLASSPATH" ] ; then
-            LIBCLASSPATH="$1/$i"
-        else
-            LIBCLASSPATH="$LIBCLASSPATH:$1/$i"
-        fi
-    done
-}
+CLASSPATH=""
 
-add_to_libclasspath "${ZORILLA_HOME}"/zoni/lib
-add_to_libclasspath "${ZORILLA_HOME}"/node/lib
-add_to_libclasspath "${ZORILLA_HOME}"/node/lib/ibis
-add_to_libclasspath "${ZORILLA_HOME}"/node/lib/gat
+for i in $ZORILLA_HOME/zoni/lib/*.jar ; do CLASSPATH="$CLASSPATH:$i" ; done
+for i in $ZORILLA_HOME/apps/lib/*.jar ; do CLASSPATH="$CLASSPATH:$i" ; done
 
-java \
-    -classpath $CLASSPATHL:$LIBCLASSPATH \
-    -Dlog4j.configuration=file:$ZORILLA_HOME/log4j.properties \
-    ibis.zorilla.apps.Zee \
-    $@
+D_LOG4J="-Dlog4j.configuration=file:$ZORILLA_HOME/log4j.properties"
+
+D_ZORILLA_HOME="-Dzorilla.home=$ZORILLA_HOME"
+
+exec $JAVA_HOME/bin/java -ea -cp $CLASSPATH $D_ZORILLA_HOME $D_LOG4J nl.vu.zorilla.apps.Zee $@
 

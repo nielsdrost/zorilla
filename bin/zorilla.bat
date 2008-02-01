@@ -9,10 +9,8 @@ IF "%ZORILLA_HOME%X"=="X" exit
 :: Create the path with the JAR files
 SET ZORILLA_CLASSPATH=
 
+FOR %%i IN ("%ZORILLA_HOME%\bamboo\lib\*.jar") DO CALL "%ZORILLA_HOME%\bin\AddToClassPath.bat" %%i
 FOR %%i IN ("%ZORILLA_HOME%\zoni\lib\*.jar") DO CALL "%ZORILLA_HOME%\bin\AddToClassPath.bat" %%i
 FOR %%i IN ("%ZORILLA_HOME%\node\lib\*.jar") DO CALL "%ZORILLA_HOME%\bin\AddToClassPath.bat" %%i
-FOR %%i IN ("%ZORILLA_HOME%\node\lib\gat\*.jar") DO CALL "%ZORILLA_HOME%\bin\AddToClassPath.bat" %%i
-FOR %%i IN ("%ZORILLA_HOME%\node\lib\ibis\*.jar") DO CALL "%ZORILLA_HOME%\bin\AddToClassPath.bat" %%i
 
-
-%JAVA_HOME%\bin\java -cp %CLASSPATH%;%ZORILLA_CLASSPATH% -Dlog4j.configuration=file:"%ZORILLA_HOME%"\log4j.properties ibis.zorilla.Main %*
+%JAVA_HOME%\bin\java -cp %CLASSPATH%;%ZORILLA_CLASSPATH% -Dlog4j.configuration=file:%ZORILLA_HOME%\log4j.properties -Dzorilla.home=%ZORILLA_HOME% nl.vu.zorilla.Node %*
