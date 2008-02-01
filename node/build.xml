@@ -16,12 +16,6 @@
         <fileset dir="external">
             <include name="*.jar" />
         </fileset>
-        <fileset dir="external/ibis">
-            <include name="*.jar" />
-        </fileset>
-        <fileset dir="external/gat">
-            <include name="*.jar" />
-        </fileset>
         <fileset dir="../zoni/lib">
             <include name="*.jar" />
         </fileset>
@@ -58,13 +52,10 @@
 
         <!-- Compile the java code from src into tmp -->
         <javac srcdir="src" 
-               destdir="tmp" 
-               debug="on"
-               source="1.5"
-               target="1.5"
-               classpathref="class_path">
-		<compilerarg value="-Xlint:unchecked" />
-	</javac>
+            destdir="tmp" 
+            debug="on"
+            classpathref="class_path" 
+            />
     	
     	<copy todir="tmp">
     	     <fileset dir="." includes="resources/*"/>
@@ -77,7 +68,7 @@
         </jar>
 
         <!-- add external stuff to lib -->
-        <copy todir="lib" flatten="true">
+        <copy todir="lib">
             <fileset dir="external" />
         </copy>
 

@@ -9,16 +9,18 @@
     </tstamp>
 
     <!-- empty version by default -->
-    <property name="VERSION" value="-1.0beta6"/>
+    <property name="VERSION" value=""/>
 	
     <target name="build" description="build everything">
         <ant dir="zoni"/>
         <ant dir="node"/>
+        <ant dir="apps"/>
     </target>
 
     <target name="clean" description="clean everything">
         <ant dir="zoni" target="clean"/>
         <ant dir="node" target="clean"/>
+        <ant dir="apps" target="clean"/>
     	
     	<delete dir="dist" />
     </target>
@@ -34,6 +36,7 @@
         <zip destfile="zorilla-src.zip">
             <zipfileset dir="zoni/src" prefix="zorilla-src/"/>
             <zipfileset dir="node/src" prefix="zorilla-src/"/>
+            <zipfileset dir="apps/src" prefix="zorilla-src/"/>
         </zip>
     	
     	<delete dir="dist"/>
@@ -41,7 +44,7 @@
     	
         <tar destfile="dist/zorilla${VERSION}.tar.gz" compression="gzip">
             <tarfileset dir="." prefix="zorilla${VERSION}"
-                includes="zorilla-src.zip, README, */lib/**, */javadoc/**, log4j.properties, LICENSE"
+                includes="zorilla-src.zip, README, */lib/**, */javadoc/**"
                 />
             <tarfileset dir="." prefix="zorilla${VERSION}" mode="755"
                 includes="bin/**"
@@ -50,7 +53,7 @@
 
         <zip destfile="dist/zorilla${VERSION}.zip">
             <zipfileset dir="." prefix="zorilla${VERSION}"
-                includes="zorilla-src.zip, README, */lib/**, */javadoc/**, log4j.properties, LICENSE"
+                includes="zorilla-src.zip, README, */lib/**, */javadoc/**"
                 />
             <zipfileset dir="." prefix="zorilla${VERSION}" filemode="755"
                 includes="bin/**"
