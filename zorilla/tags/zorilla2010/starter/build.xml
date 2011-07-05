@@ -1,0 +1,62 @@
+<project 
+    name="zorilla-starter" 
+    default="build" 
+    basedir=".">
+
+    <description>
+        Build file for Zorilla Node Interface (ZoNI)
+    </description>
+
+    <target name="build" depends="clean, compile">
+    </target>
+
+    <target name="javadoc"
+        depends="compile"
+        description="generate all javadocs">
+
+        <javadoc destdir="javadoc"
+            access="public"
+            classpathref="class_path"
+            packagenames="*"
+            sourcepath="src"
+            overview="src/overview.html">
+            <link href="http://java.sun.com/j2se/1.4.2/docs/api/" />
+        </javadoc>
+    </target>
+
+
+    <target name="compile" 
+        description="compile and build jar file">
+
+        <tstamp />
+
+        <mkdir dir="tmp" />
+        <mkdir dir="lib" />
+
+        <!-- Compile the java code from src into tmp -->
+        <javac srcdir="src" 
+               destdir="tmp" 
+               debug="on"
+               source="1.6"
+               target="1.6">
+		<compilerarg value="-Xlint:unchecked" />
+	</javac>
+
+        <jar destfile="lib/${ant.project.name}.jar" 
+            basedir="tmp" 
+            includes="**/*.class">
+            <manifest>
+                <attribute name="Main-Class" value="ibis.zorilla.starter.Starter" />
+            </manifest>
+        </jar>
+
+        <delete dir="tmp" />
+    </target>
+
+    <target name="clean" description="clean up">
+        <delete dir="tmp" />
+        <delete dir="lib" />
+        <delete dir="javadoc" />
+    </target>
+
+</project>

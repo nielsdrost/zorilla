@@ -1,0 +1,127 @@
+<project name="zorilla" default="build" basedir=".">
+    <description>
+        Build file for Zorilla
+    </description>
+
+    <!-- empty version by default -->
+    <property name="version" value="" />
+
+    <!-- locations of external libraries. Defaults to included versions,
+         override to use custom versions -->
+    <property name="ipl" value="external/ipl" />
+
+    <!-- set a timestamp -->
+    <tstamp>
+        <format property="timestamp" pattern="yyyyMMddHHmmss" />
+    </tstamp>
+
+    <!-- create the class path. Consists of all external jars,
+        zoni and bamboo -->
+    <path id="class_path">
+        <fileset dir="lib">
+            <include name="*.jar" />
+        </fileset>
+        <pathelement path="tmp" />
+    </path>
+
+    <target name="starter" description="build starter sub project">
+        <ant dir="starter" />
+    </target>
+
+    <target name="build" description="build jar file" depends="clean,copy,starter,compile" />
+
+    <target name="copy">
+        <!-- add external stuff to lib -->
+        <echo message="using IPL from ${ipl}" />
+        <copy todir="lib" includeEmptyDirs="false">
+            <fileset dir="${ipl}" />
+        </copy>
+
+    
+        <copy todir="lib">
+            <fileset dir="external" includes="*.jar" />
+        </copy>
+    </target>
+
+
+    <target name="compile" description="build jar file" depends="clean">
+        <mkdir dir="tmp" />
+        <mkdir dir="lib" />
+
+        <!-- Compile the java code from src into tmp -->
+        <javac srcdir="src" destdir="tmp" debug="on" source="1.5" target="1.5" classpathref="class_path">
+            <compilerarg value="-Xlint:unchecked" />
+        </javac>
+
+        <!-- Run Ibisc -->
+        <java classname="ibis.compile.Ibisc" taskname="Ibisc" failonerror="true" dir="tmp" maxmemory="512m" fork="true">
+            <arg line="." />
+            <classpath refid="class_path" />
+        </java>
+
+        <copy todir="tmp">
+            <fileset dir="." includes="resources/*" />
+        </copy>
+
+        <jar destfile="lib/${ant.project.name}${version}.jar" basedir="tmp">
+            <manifest>
+                <attribute name="Implementation-Version" value="${timestamp}" />
+            </manifest>
+        </jar>
+
+        <delete dir="tmp" />
+    </target>
+
+    <target name="clean" description="clean everything">
+        <ant dir="starter" target="clean" />
+
+        <delete dir="dist" />
+        <delete dir="lib" />
+    </target>
+
+    <target name="lib" depends="build" description="create a distribution of the zorilla jars">
+        <zip destfile="zorilla-lib.zip">
+	    <zipfileset dir="lib" includes="*.jar,adaptors/GenericAdaptor/*,adaptors/LocalAdaptor/*,adaptors/shared/*" />
+            <zipfileset dir="." includes="log4j.properties" />
+            <zipfileset dir="." includes="zorilla.starter.properties" fullpath="zorilla.properties" />
+        </zip>
+
+    </target>
+
+    <target name="upload" depends="lib" description="upload lib zip file">
+
+        <echo message="uploading zip file to website" />
+        <exec executable="scp">
+            <arg value="zorilla-lib.zip" />
+            <arg value="starter/lib/zorilla-starter.jar" />
+            <arg value="bin/zorilla-starter" />
+            <arg value="ndrost@zorilla.cs.vu.nl:/home/ndrost/www" />
+        </exec>
+
+        <!--	
+		<echo message="uploading zip file to grid5000"/>
+		<exec executable="scp">
+			<arg value="zorilla-lib.zip" />
+			<arg value="ndrost@sophia.grid5000.inria.fr:zorilla/" />
+		</exec>
+		-->
+
+    </target>
+
+
+    <target name="dist" depends="build" description="create a binary distribution of zorilla">
+
+        <zip destfile="zorilla-src.zip">
+            <zipfileset dir="src" prefix="zorilla-src/" />
+        </zip>
+
+        <delete dir="dist" />
+        <mkdir dir="dist" />
+
+        <zip destfile="dist/zorilla${version}.zip">
+            <zipfileset dir="." prefix="zorilla${version}" includes="zorilla-src.zip, README, lib/**, javadoc/**, log4j.properties, LICENSE" />
+            <zipfileset dir="." prefix="zorilla${version}" filemode="755" includes="bin/**" excludes="bin/zorilla-starter, bin/zorilla-daemon" />
+        </zip>
+
+    </target>
+</project>
